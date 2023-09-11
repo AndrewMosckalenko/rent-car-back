@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:9
+    environment:
+      POSTGRES_DB: "postgres"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "root"
+    ports:
+      - "5432:5432"
+
+  server:
+    container_name: "server"
+    build:
+      context: .
+    ports:
+      - "3000:3000"
+      - "5000:5000"
+    restart: unless-stopped
+    command: "npm run start"
+    env_file:
+      - .env
+    depends_on:
+      - postgres

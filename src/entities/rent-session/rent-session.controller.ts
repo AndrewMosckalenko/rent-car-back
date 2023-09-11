@@ -5,11 +5,6 @@ import { RentSessionService } from './rent-session.service';
 export class RentSessionController {
   constructor(private rentSessionService: RentSessionService) {}
 
-  @Get('/')
-  async helloRent() {
-    return 'Hello rent controller';
-  }
-
   @Get('/is-available/:car_id')
   async getCarIsAvailable(@Query() query) {
     const response = await this.rentSessionService.carIsAvailableInInterval(

@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+
 import {
   BASE_COST,
   MAX_RENT_TIME,
@@ -6,17 +7,13 @@ import {
   MIN_RENT_TIME,
   TARIF_PLAN,
   WEEKEND,
-} from 'src/consts/appConfig';
+} from '../../consts/appConfig';
 import {
   RENT_SESSION_DIDNT_CREATE_MESSAGE,
   RENT_START_OR_END_IS_WEEKEND_MESSAGE,
   RENT_TIME_IS_INVALID_MESSAGE,
-} from 'src/consts/errorMessages';
-import { PostgresManagerService } from 'src/postgresManager/postgres-manager/postgres-manager.service';
-import {
-  createRentSessionQueryCreator,
-  selectCountOfDisturbingRentSessionQueryCreator,
-} from 'utils/queryCreators';
+} from '../../consts/errorMessages';
+import { PostgresManagerService } from '../../postgresManager/postgres-manager/postgres-manager.service';
 
 @Injectable()
 export class RentSessionService {
@@ -75,10 +72,16 @@ export class RentSessionService {
     dateStart: string,
     dateEnd: string,
   ) {
-    const res = await this.postgresManagerService.createQuery(
-      selectCountOfDisturbingRentSessionQueryCreator(carId, dateStart, dateEnd),
-    );
-    return Number(res.rows?.[0].count) === 0;
+    try {
+      const isAvailable = await this.postgresManagerService.carIsAvailable(
+        carId,
+        dateStart,
+        dateEnd,
+      );
+      return isAvailable;
+    } catch (e) {
+      return false;
+    }
   }
 
   async createRentSession(carId: number, dateStart: string, dateEnd: string) {
@@ -93,10 +96,14 @@ export class RentSessionService {
         throw new Error(RENT_SESSION_DIDNT_CREATE_MESSAGE);
       }
 
-      await this.postgresManagerService.createQuery(
-        createRentSessionQueryCreator(dateStart, dateEnd, rentCost, carId),
-      );
-      return true;
+      const resultOfInsert =
+        await this.postgresManagerService.createRentSession(
+          dateStart,
+          dateEnd,
+          rentCost,
+          carId,
+        );
+      return resultOfInsert;
     } catch (e) {
       return e.message;
     }

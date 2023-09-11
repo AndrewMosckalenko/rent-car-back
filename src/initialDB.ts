@@ -8,7 +8,7 @@ export default async function initDB() {
     await pool.connect();
     await pool.query(initDBQueryCreator());
     console.log('DB is inited');
-    await pool.end();
+    // await pool.end();
   } catch (e) {
     throw e;
   }

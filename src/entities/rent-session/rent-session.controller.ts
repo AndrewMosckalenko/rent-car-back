@@ -1,7 +1,10 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Controller, Get, Post, Query } from '@nestjs/common';
+import { RentSessionService } from './rent-session.service';
 
 @Controller('rent-session')
 export class RentSessionController {
+  constructor(private rentSessionService: RentSessionService) {}
+
   @Get('/')
   async helloRent() {
     return 'Hello rent controller';
@@ -13,8 +16,12 @@ export class RentSessionController {
   }
 
   @Get('/cost')
-  async getRentCost() {
-    return 'Hello rent controller';
+  async getRentCost(@Query() query) {
+    const response = await this.rentSessionService.costOfRent(
+      query.rentStart,
+      query.rentEnd,
+    );
+    return response;
   }
 
   @Get('/report')

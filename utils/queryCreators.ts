@@ -1,6 +1,6 @@
-export function createRentSessionQueryCreator() {
+export function createRentSessionTableQueryCreator() {
   return `CREATE TABLE IF NOT EXISTS "rentSessions"(
-    id integer PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     rentStartDate Date NOT NULL,
     rentEndDate Date NOT NULL,
     rentCost integer NOT NULL DEFAULT 0,
@@ -9,5 +9,14 @@ export function createRentSessionQueryCreator() {
 }
 
 export function initDBQueryCreator() {
-  return `${createRentSessionQueryCreator()}`;
+  return `${createRentSessionTableQueryCreator()}`;
+}
+
+export function createRentSessionQueryCreator(
+  dateStart: string,
+  dateEnd: string,
+  rentCost: number,
+  carId: number,
+) {
+  return `INSERT INTO "rentSessions"(rentStartDate, rentEndDate, rentCost, carId) VALUES('${dateStart}', '${dateEnd}', ${rentCost}, ${carId});`;
 }

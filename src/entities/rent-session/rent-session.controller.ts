@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { RentSessionService } from './rent-session.service';
 
 @Controller('rent-session')
@@ -23,14 +23,19 @@ export class RentSessionController {
     );
     return response;
   }
-
+  
   @Get('/report')
   async getReport() {
     return 'Hello rent controller';
   }
 
   @Post('/')
-  async postCreateRentCarSession() {
-    return 'Hello rent controller';
+  async postCreateRentCarSession(@Body() { carId, dateStart, dateEnd }) {
+    const response = await this.rentSessionService.createRentSession(
+      carId,
+      dateStart,
+      dateEnd,
+    );
+    return response;
   }
 }

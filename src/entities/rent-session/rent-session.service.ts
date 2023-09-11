@@ -8,12 +8,17 @@ import {
   WEEKEND,
 } from 'src/consts/appConfig';
 import {
+  RENT_SESSION_DIDNT_CREATE_MESSAGE,
   RENT_START_OR_END_IS_WEEKEND_MESSAGE,
   RENT_TIME_IS_INVALID_MESSAGE,
 } from 'src/consts/errorMessages';
+import { PostgresManagerService } from 'src/postgresManager/postgres-manager/postgres-manager.service';
+import { createRentSessionQueryCreator } from 'utils/queryCreators';
 
 @Injectable()
 export class RentSessionService {
+  constructor(private postgresManagerService: PostgresManagerService) {}
+
   async costOfRent(
     dateStart: string,
     dateEnd: string,
@@ -59,6 +64,36 @@ export class RentSessionService {
       return cost;
     } catch (e) {
       return e.message as string;
+    }
+  }
+
+  async carIsAvailableInInterval(
+    carId: number,
+    dateStart: string,
+    dateEnd: string,
+  ) {
+    // @todo
+    return true;
+  }
+
+  async createRentSession(carId: number, dateStart: string, dateEnd: string) {
+    try {
+      const rentCost = await this.costOfRent(dateStart, dateEnd);
+
+      if (typeof rentCost !== 'number' || isNaN(rentCost)) {
+        throw new Error(RENT_SESSION_DIDNT_CREATE_MESSAGE);
+      }
+
+      if (!this.carIsAvailableInInterval(carId, dateStart, dateEnd)) {
+        throw new Error(RENT_SESSION_DIDNT_CREATE_MESSAGE);
+      }
+
+      await this.postgresManagerService.createQuery(
+        createRentSessionQueryCreator(dateStart, dateEnd, rentCost, carId),
+      );
+      return true;
+    } catch (e) {
+      return e.message;
     }
   }
 }

@@ -11,8 +11,13 @@ export class RentSessionController {
   }
 
   @Get('/is-available/:car_id')
-  async getCarIsAvailable() {
-    return 'Hello rent controller';
+  async getCarIsAvailable(@Query() query) {
+    const response = await this.rentSessionService.carIsAvailableInInterval(
+      query.carId,
+      query.dateStart,
+      query.dateEnd,
+    );
+    return response;
   }
 
   @Get('/cost')
@@ -23,7 +28,7 @@ export class RentSessionController {
     );
     return response;
   }
-  
+
   @Get('/report')
   async getReport() {
     return 'Hello rent controller';

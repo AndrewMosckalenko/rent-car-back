@@ -13,7 +13,10 @@ import {
   RENT_TIME_IS_INVALID_MESSAGE,
 } from 'src/consts/errorMessages';
 import { PostgresManagerService } from 'src/postgresManager/postgres-manager/postgres-manager.service';
-import { createRentSessionQueryCreator } from 'utils/queryCreators';
+import {
+  createRentSessionQueryCreator,
+  selectCountOfDisturbingRentSessionQueryCreator,
+} from 'utils/queryCreators';
 
 @Injectable()
 export class RentSessionService {
@@ -72,8 +75,10 @@ export class RentSessionService {
     dateStart: string,
     dateEnd: string,
   ) {
-    // @todo
-    return true;
+    const res = await this.postgresManagerService.createQuery(
+      selectCountOfDisturbingRentSessionQueryCreator(carId, dateStart, dateEnd),
+    );
+    return Number(res.rows?.[0].count) === 0;
   }
 
   async createRentSession(carId: number, dateStart: string, dateEnd: string) {

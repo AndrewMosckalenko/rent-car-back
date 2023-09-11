@@ -8,7 +8,8 @@ export class PostgresManagerService {
     try {
       const pool = new Pool(postgresConfig);
       await pool.connect();
-      await pool.query(query);
+      const res = await pool.query(query);
+      return res;
     } catch (e) {
       throw e;
     }

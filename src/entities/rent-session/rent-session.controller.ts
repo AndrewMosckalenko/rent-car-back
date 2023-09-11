@@ -5,7 +5,7 @@ import { RentSessionService } from './rent-session.service';
 export class RentSessionController {
   constructor(private rentSessionService: RentSessionService) {}
 
-  @Get('/is-available/:car_id')
+  @Get('/is-available')
   async getCarIsAvailable(@Query() query) {
     const response = await this.rentSessionService.carIsAvailableInInterval(
       query.carId,
@@ -25,8 +25,12 @@ export class RentSessionController {
   }
 
   @Get('/report')
-  async getReport() {
-    return 'Hello rent controller';
+  async getReport(@Query() query) {
+    const response = await this.rentSessionService.getReportAboutCarUsage(
+      query.dateStart,
+      query.dateEnd,
+    );
+    return response;
   }
 
   @Post('/')

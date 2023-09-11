@@ -92,7 +92,7 @@ export class RentSessionService {
         throw new Error(RENT_SESSION_DIDNT_CREATE_MESSAGE);
       }
 
-      if (!this.carIsAvailableInInterval(carId, dateStart, dateEnd)) {
+      if (!(await this.carIsAvailableInInterval(carId, dateStart, dateEnd))) {
         throw new Error(RENT_SESSION_DIDNT_CREATE_MESSAGE);
       }
 
@@ -104,6 +104,18 @@ export class RentSessionService {
           carId,
         );
       return resultOfInsert;
+    } catch (e) {
+      return e.message;
+    }
+  }
+
+  async getReportAboutCarUsage(startPeriodDate: string, endPriodDate: string) {
+    try {
+      const report = await this.postgresManagerService.getReportAboutCarUsing(
+        startPeriodDate,
+        endPriodDate,
+      );
+      return report;
     } catch (e) {
       return e.message;
     }

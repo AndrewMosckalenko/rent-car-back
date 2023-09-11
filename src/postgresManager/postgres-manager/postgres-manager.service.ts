@@ -4,6 +4,7 @@ import { Injectable } from '@nestjs/common';
 import postgresConfig from '../../postgresConfig';
 import {
   createRentSessionQueryCreator,
+  getReportAboutUseCarQueryCreator,
   selectCountOfDisturbingRentSessionQueryCreator,
 } from '../../../utils/queryCreators';
 
@@ -51,6 +52,22 @@ export class PostgresManagerService {
         createRentSessionQueryCreator(dateStart, dateEnd, rentCost, carId),
       );
       return true;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async getReportAboutCarUsing(startPeriodDate: string, endPeriodDate: string) {
+    try {
+      const res = await this.createQuery(
+        getReportAboutUseCarQueryCreator(startPeriodDate, endPeriodDate),
+      );
+      const report = res.rows.map((row) => ({
+        carId: row.carid,
+        usage: row.usage,
+      }));
+
+      return report;
     } catch (e) {
       throw e;
     }

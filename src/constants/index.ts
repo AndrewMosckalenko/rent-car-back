@@ -5,7 +5,7 @@ export {
   INSET_RENT_SESSION_REQUEST_FAILED_MESSAGE,
   SELECT_CAR_IS_AVAILABLE_REQUEST_FAILED_MESSAGE,
   SELECT_CAR_USAGE_REPORT_REQUEST_FAILED_MESSAGE,
-} from './errorMessages';
+} from './error-messages';
 export {
   WEEKEND,
   BREAK_RENT_TIME,
@@ -14,4 +14,4 @@ export {
   MIN_RENT_TIME,
   TARIF_PLAN,
   MILLISECONDS_IN_ONE_DAY,
-} from './appConfig';
+} from './app-config';

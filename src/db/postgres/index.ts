@@ -4,6 +4,6 @@ export {
   createRentSessionQueryCreator,
   selectCountOfDisturbingRentSessionQueryCreator,
   getReportAboutUseCarQueryCreator,
-} from './queryCreators';
-export { postgresConfig, IPostgresConfig } from './postgresConfig';
+} from './query-creators';
+export { postgresConfig, IPostgresConfig } from './postgres-config';
 export { initDB, postgresPool } from './initialDB';

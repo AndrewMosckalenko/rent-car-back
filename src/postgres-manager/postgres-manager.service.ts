@@ -11,7 +11,7 @@ import {
   SELECT_CAR_IS_AVAILABLE_REQUEST_FAILED_MESSAGE,
   SELECT_CAR_USAGE_REPORT_REQUEST_FAILED_MESSAGE,
 } from '../constants';
-import { CreateRentSessionDTO } from '../rentSession/dto';
+import { CreateRentSessionDTO } from '../rent-session/dto';
 
 @Injectable()
 export class PostgresManagerService {

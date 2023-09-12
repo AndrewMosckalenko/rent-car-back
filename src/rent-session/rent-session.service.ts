@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 
 import { RENT_SESSION_DIDNT_CREATE_MESSAGE } from '../constants';
-import { PostgresManagerService } from '../postgresManager/postgresManager.service';
+import { PostgresManagerService } from '../postgres-manager/postgres-manager.service';
 import { getFirstDayOfMonth, getLastDayOfMonth, rentCost } from '../utils';
 import { CreateRentSessionDTO } from './dto';
 

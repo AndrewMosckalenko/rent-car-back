@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
-import { RentSessionService } from './rentSession.service';
+import { RentSessionService } from './rent-session.service';
 import {
   CreateRentSessionDTO,
   GetCarIsAvailableDTO,

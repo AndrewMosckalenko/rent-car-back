@@ -1,6 +1,6 @@
 import { datesDiffInDays } from 'src/utils';
 import { BREAK_RENT_TIME } from '../../constants';
-import { CreateRentSessionDTO } from '../../rentSession/dto';
+import { CreateRentSessionDTO } from '../../rent-session/dto';
 import { rentSessionCreateTableQuery } from './queries';
 
 export function initDBQueryCreator() {

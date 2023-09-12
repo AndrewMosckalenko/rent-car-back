@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { RentSessionModule } from './rentSession/rentSession.module';
-import { PostgresManagerModule } from './postgresManager/postgresManager.module';
+import { RentSessionModule } from './rent-session/rent-session.module';
+import { PostgresManagerModule } from './postgres-manager/postgres-manager.module';
 
 @Module({
   imports: [RentSessionModule, PostgresManagerModule],

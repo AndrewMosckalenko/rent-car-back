@@ -28,7 +28,6 @@ export class RentSessionService {
     try {
       const dayOfStart = new Date(dateStart).getDay();
       const dayOfEnd = new Date(dateEnd).getDay();
-
       // ошибка если начало или конец аренды выпал на выходной
       if (
         WEEKEND.indexOf(dayOfStart) !== -1 ||
@@ -86,7 +85,6 @@ export class RentSessionService {
         createDto.rentStartDate,
         createDto.rentEndDate,
       );
-
       if (typeof createDto.rentCost !== 'number' || isNaN(createDto.rentCost)) {
         throw new Error(RENT_SESSION_DIDNT_CREATE_MESSAGE);
       }

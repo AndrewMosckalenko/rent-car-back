@@ -24,7 +24,7 @@ export function selectCountOfDisturbingRentSessionQueryCreator(
   dateStart: string,
   dateEnd: string,
 ) {
-  return `SELECT COUNT(*) FROM "rentSessions" WHERE (id = ${carId} AND ((rentstartdate < Date('${dateStart}') AND Date(rentenddate + ${BREAK_RENT_TIME}) > Date('${dateStart}')) OR (rentstartdate < Date('${dateEnd}') AND Date(rentenddate + ${BREAK_RENT_TIME}) > Date('${dateEnd}')) OR (rentstartdate > Date('${dateStart}') AND Date(rentenddate + ${BREAK_RENT_TIME}) < '${dateEnd}')));`;
+  return `SELECT COUNT(*) FROM "rentSessions" WHERE (carid = ${carId} AND ((rentstartdate < Date(Date('${dateStart}') + ${BREAK_RENT_TIME})  AND Date(rentenddate + ${BREAK_RENT_TIME}) > Date('${dateStart}')) OR (rentstartdate < Date(Date('${dateEnd}') + ${BREAK_RENT_TIME}) AND Date(rentenddate + ${BREAK_RENT_TIME}) > Date(Date('${dateEnd}') + ${BREAK_RENT_TIME})) OR (rentstartdate > Date('${dateStart}') AND Date(rentenddate + ${BREAK_RENT_TIME}) < Date(Date('${dateEnd}') + ${BREAK_RENT_TIME}))));`;
 }
 
 export function getReportAboutUseCarQueryCreator(

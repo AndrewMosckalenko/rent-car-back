@@ -1,7 +1,8 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import initDB from './initialDB';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+
+import { AppModule } from './app.module';
+import { initDB } from './db/postgres';
 
 const port = process.env.SERVER_PORT || 3000;
 

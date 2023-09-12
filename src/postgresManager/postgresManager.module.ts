@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { PostgresManagerService } from './postgres-manager.service';
+import { PostgresManagerService } from './postgresManager.service';
 
 @Module({
   providers: [PostgresManagerService],

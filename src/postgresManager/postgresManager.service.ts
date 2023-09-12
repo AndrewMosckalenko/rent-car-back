@@ -1,27 +1,23 @@
-import { Pool } from 'pg';
 import { Injectable } from '@nestjs/common';
 
-import postgresConfig from '../../postgresConfig';
 import {
   createRentSessionQueryCreator,
   getReportAboutUseCarQueryCreator,
   selectCountOfDisturbingRentSessionQueryCreator,
-} from '../../../utils/queryCreators';
+  postgresPool,
+} from '../db/postgres';
 import {
   INSET_RENT_SESSION_REQUEST_FAILED_MESSAGE,
   SELECT_CAR_IS_AVAILABLE_REQUEST_FAILED_MESSAGE,
   SELECT_CAR_USAGE_REPORT_REQUEST_FAILED_MESSAGE,
-} from '../../consts/errorMessages';
-import { CreateRentSessionDTO } from 'src/entities/rent-session/dto/createRentSessionDTO';
+} from '../constants';
+import { CreateRentSessionDTO } from '../rentSession/dto';
 
 @Injectable()
 export class PostgresManagerService {
-  async createQuery(query: string) {
+  async createQuery({ query, values }) {
     try {
-      const pool = new Pool(postgresConfig);
-      await pool.connect();
-      const res = await pool.query(query);
-      return res;
+      return postgresPool.query(query, values);
     } catch (e) {
       throw e;
     }
@@ -47,10 +43,9 @@ export class PostgresManagerService {
     }
   }
 
-  async createRentSession(createDTO: CreateRentSessionDTO): Promise<boolean> {
+  async createRentSession(createDTO: CreateRentSessionDTO): Promise<void> {
     try {
       await this.createQuery(createRentSessionQueryCreator(createDTO));
-      return true;
     } catch (e) {
       throw new Error(INSET_RENT_SESSION_REQUEST_FAILED_MESSAGE);
     }
@@ -61,12 +56,10 @@ export class PostgresManagerService {
       const res = await this.createQuery(
         getReportAboutUseCarQueryCreator(startPeriodDate, endPeriodDate),
       );
-      const report = res.rows.map((row) => ({
-        carId: row.carid,
+      return res.rows.map((row) => ({
+        carId: row.car_id,
         usage: row.usage,
       }));
-
-      return report;
     } catch (e) {
       throw new Error(SELECT_CAR_USAGE_REPORT_REQUEST_FAILED_MESSAGE);
     }

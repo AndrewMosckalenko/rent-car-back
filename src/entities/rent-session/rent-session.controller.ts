@@ -1,40 +1,48 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { RentSessionService } from './rent-session.service';
+import {
+  CreateRentSessionDTO,
+  GetCarIsAvailableDTO,
+  GetReportAboutCarUsageDTO,
+  GetReportByMontDTO,
+} from './dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Rent sessions')
 @Controller('rent-session')
 export class RentSessionController {
   constructor(private rentSessionService: RentSessionService) {}
 
   @Get('/is-available')
-  async getCarIsAvailable(@Query() query) {
+  async getCarIsAvailable(@Query() query: GetCarIsAvailableDTO) {
     const response = await this.rentSessionService.carIsAvailableInInterval(
       query.carId,
-      query.dateStart,
-      query.dateEnd,
+      query.dateStartPeriod,
+      query.dateEndPeriod,
     );
     return response;
   }
 
   @Get('/cost')
-  async getRentCost(@Query() query) {
+  async getRentCost(@Query() query: GetReportAboutCarUsageDTO) {
     const response = await this.rentSessionService.costOfRent(
-      query.rentStart,
-      query.rentEnd,
+      query.dateStartPeriod,
+      query.dateEndPeriod,
     );
     return response;
   }
 
   @Get('/report')
-  async getReport(@Query() query) {
+  async getReport(@Query() query: GetReportAboutCarUsageDTO) {
     const response = await this.rentSessionService.getReportAboutCarUsage(
-      query.dateStart,
-      query.dateEnd,
+      query.dateStartPeriod,
+      query.dateEndPeriod,
     );
     return response;
   }
 
   @Get('/report-by-month')
-  async getReportByMonth(@Query() query) {
+  async getReportByMonth(@Query() query: GetReportByMontDTO) {
     const response =
       await this.rentSessionService.getReportAboutCarUsageByMonthAndYear(
         query.month,
@@ -44,12 +52,8 @@ export class RentSessionController {
   }
 
   @Post('/')
-  async postCreateRentCarSession(@Body() { carId, dateStart, dateEnd }) {
-    const response = await this.rentSessionService.createRentSession(
-      carId,
-      dateStart,
-      dateEnd,
-    );
+  async postCreateRentCarSession(@Body() createDto: CreateRentSessionDTO) {
+    const response = await this.rentSessionService.createRentSession(createDto);
     return response;
   }
 }

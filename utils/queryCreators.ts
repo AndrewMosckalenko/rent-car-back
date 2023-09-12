@@ -1,4 +1,5 @@
 import { BREAK_RENT_TIME, MILLISENDS_IN_ONE_DAY } from 'src/consts/appConfig';
+import { CreateRentSessionDTO } from 'src/entities/rent-session/dto/createRentSessionDTO';
 
 export function createRentSessionTableQueryCreator() {
   return `CREATE TABLE IF NOT EXISTS "rentSessions"(
@@ -14,13 +15,8 @@ export function initDBQueryCreator() {
   return `${createRentSessionTableQueryCreator()}`;
 }
 
-export function createRentSessionQueryCreator(
-  dateStart: string,
-  dateEnd: string,
-  rentCost: number,
-  carId: number,
-) {
-  return `INSERT INTO "rentSessions"(rentStartDate, rentEndDate, rentCost, carId) VALUES('${dateStart}', '${dateEnd}', ${rentCost}, ${carId});`;
+export function createRentSessionQueryCreator(createDTO: CreateRentSessionDTO) {
+  return `INSERT INTO "rentSessions"(rentStartDate, rentEndDate, rentCost, carId) VALUES('${createDTO.rentStartDate}', '${createDTO.rentEndDate}', ${createDTO.rentCost}, ${createDTO.carId});`;
 }
 
 export function selectCountOfDisturbingRentSessionQueryCreator(

@@ -18,15 +18,13 @@ import {
   getFirstDayOfMonth,
   getLastDayOfMonth,
 } from '../../../utils/utils';
+import { CreateRentSessionDTO } from './dto/createRentSessionDTO';
 
 @Injectable()
 export class RentSessionService {
   constructor(private postgresManagerService: PostgresManagerService) {}
 
-  async costOfRent(
-    dateStart: string,
-    dateEnd: string,
-  ): Promise<number | string> {
+  async costOfRent(dateStart: string, dateEnd: string): Promise<number> {
     try {
       const dayOfStart = new Date(dateStart).getDay();
       const dayOfEnd = new Date(dateEnd).getDay();
@@ -82,25 +80,29 @@ export class RentSessionService {
     }
   }
 
-  async createRentSession(carId: number, dateStart: string, dateEnd: string) {
+  async createRentSession(createDto: CreateRentSessionDTO) {
     try {
-      const rentCost = await this.costOfRent(dateStart, dateEnd);
+      createDto.rentCost = await this.costOfRent(
+        createDto.rentStartDate,
+        createDto.rentEndDate,
+      );
 
-      if (typeof rentCost !== 'number' || isNaN(rentCost)) {
+      if (typeof createDto.rentCost !== 'number' || isNaN(createDto.rentCost)) {
         throw new Error(RENT_SESSION_DIDNT_CREATE_MESSAGE);
       }
 
-      if (!(await this.carIsAvailableInInterval(carId, dateStart, dateEnd))) {
+      if (
+        !(await this.carIsAvailableInInterval(
+          createDto.carId,
+          createDto.rentStartDate,
+          createDto.rentEndDate,
+        ))
+      ) {
         throw new Error(RENT_SESSION_DIDNT_CREATE_MESSAGE);
       }
 
       const resultOfInsert =
-        await this.postgresManagerService.createRentSession(
-          dateStart,
-          dateEnd,
-          rentCost,
-          carId,
-        );
+        await this.postgresManagerService.createRentSession(createDto);
       return resultOfInsert;
     } catch (e) {
       return e.message;

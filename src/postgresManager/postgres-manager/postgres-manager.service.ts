@@ -12,6 +12,7 @@ import {
   SELECT_CAR_IS_AVAILABLE_REQUEST_FAILED_MESSAGE,
   SELECT_CAR_USAGE_REPORT_REQUEST_FAILED_MESSAGE,
 } from '../../consts/errorMessages';
+import { CreateRentSessionDTO } from 'src/entities/rent-session/dto/createRentSessionDTO';
 
 @Injectable()
 export class PostgresManagerService {
@@ -46,16 +47,9 @@ export class PostgresManagerService {
     }
   }
 
-  async createRentSession(
-    dateStart: string,
-    dateEnd: string,
-    rentCost: number,
-    carId: number,
-  ): Promise<boolean> {
+  async createRentSession(createDTO: CreateRentSessionDTO): Promise<boolean> {
     try {
-      await this.createQuery(
-        createRentSessionQueryCreator(dateStart, dateEnd, rentCost, carId),
-      );
+      await this.createQuery(createRentSessionQueryCreator(createDTO));
       return true;
     } catch (e) {
       throw new Error(INSET_RENT_SESSION_REQUEST_FAILED_MESSAGE);

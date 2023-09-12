@@ -33,6 +33,16 @@ export class RentSessionController {
     return response;
   }
 
+  @Get('/report-by-month')
+  async getReportByMonth(@Query() query) {
+    const response =
+      await this.rentSessionService.getReportAboutCarUsageByMonthAndYear(
+        query.month,
+        query.year,
+      );
+    return response;
+  }
+
   @Post('/')
   async postCreateRentCarSession(@Body() { carId, dateStart, dateEnd }) {
     const response = await this.rentSessionService.createRentSession(

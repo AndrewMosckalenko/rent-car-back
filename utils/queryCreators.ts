@@ -39,5 +39,5 @@ export function getReportAboutUseCarQueryCreator(
     (new Date(endPeriodDate).getTime() - new Date(startPeriodDate).getTime()) /
       MILLISENDS_IN_ONE_DAY +
     1;
-  return `SELECT carid, SUM(((CASE WHEN rentenddate > DATE('${endPeriodDate}') THEN DATE('${endPeriodDate}') ELSE rentenddate END) - (CASE WHEN rentstartdate < DATE('${startPeriodDate}') THEN DATE('${startPeriodDate}') ELSE rentstartdate END)) * 100 / ${dayCount}) as usage FROM "rentSessions" WHERE rentstartdate <= DATE('${endPeriodDate}') AND rentenddate >= DATE('${startPeriodDate}')  GROUP BY carid;`;
+  return `SELECT carid, SUM(((CASE WHEN rentenddate > DATE('${endPeriodDate}') THEN DATE('${endPeriodDate}') ELSE rentenddate END) - (CASE WHEN rentstartdate < DATE('${startPeriodDate}') THEN DATE('${startPeriodDate}') ELSE rentstartdate END) + 1) * 100 / ${dayCount}) as usage FROM "rentSessions" WHERE rentstartdate <= DATE('${endPeriodDate}') AND rentenddate >= DATE('${startPeriodDate}')  GROUP BY carid;`;
 }

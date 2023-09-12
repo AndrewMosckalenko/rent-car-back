@@ -7,6 +7,11 @@ import {
   getReportAboutUseCarQueryCreator,
   selectCountOfDisturbingRentSessionQueryCreator,
 } from '../../../utils/queryCreators';
+import {
+  INSET_RENT_SESSION_REQUEST_FAILED_MESSAGE,
+  SELECT_CAR_IS_AVAILABLE_REQUEST_FAILED_MESSAGE,
+  SELECT_CAR_USAGE_REPORT_REQUEST_FAILED_MESSAGE,
+} from '../../consts/errorMessages';
 
 @Injectable()
 export class PostgresManagerService {
@@ -37,7 +42,7 @@ export class PostgresManagerService {
 
       return Number(res.rows?.[0].count) === 0;
     } catch (e) {
-      throw e;
+      throw new Error(SELECT_CAR_IS_AVAILABLE_REQUEST_FAILED_MESSAGE);
     }
   }
 
@@ -53,7 +58,7 @@ export class PostgresManagerService {
       );
       return true;
     } catch (e) {
-      throw e;
+      throw new Error(INSET_RENT_SESSION_REQUEST_FAILED_MESSAGE);
     }
   }
 
@@ -69,7 +74,7 @@ export class PostgresManagerService {
 
       return report;
     } catch (e) {
-      throw e;
+      throw new Error(SELECT_CAR_USAGE_REPORT_REQUEST_FAILED_MESSAGE);
     }
   }
 }

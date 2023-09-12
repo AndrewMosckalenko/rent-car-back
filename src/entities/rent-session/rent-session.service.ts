@@ -3,7 +3,6 @@ import { Injectable } from '@nestjs/common';
 import {
   BASE_COST,
   MAX_RENT_TIME,
-  MILLISENDS_IN_ONE_DAY,
   MIN_RENT_TIME,
   TARIF_PLAN,
   WEEKEND,
@@ -14,6 +13,11 @@ import {
   RENT_TIME_IS_INVALID_MESSAGE,
 } from '../../consts/errorMessages';
 import { PostgresManagerService } from '../../postgresManager/postgres-manager/postgres-manager.service';
+import {
+  datesDiffInDays,
+  getFirstDayOfMonth,
+  getLastDayOfMonth,
+} from '../../../utils/utils';
 
 @Injectable()
 export class RentSessionService {
@@ -24,11 +28,8 @@ export class RentSessionService {
     dateEnd: string,
   ): Promise<number | string> {
     try {
-      const dateStartOnDate = new Date(dateStart);
-      const dateEndOnDate = new Date(dateEnd);
-
-      const dayOfStart = dateStartOnDate.getDay();
-      const dayOfEnd = dateEndOnDate.getDay();
+      const dayOfStart = new Date(dateStart).getDay();
+      const dayOfEnd = new Date(dateEnd).getDay();
 
       // ошибка если начало или конец аренды выпал на выходной
       if (
@@ -38,10 +39,7 @@ export class RentSessionService {
         throw new Error(RENT_START_OR_END_IS_WEEKEND_MESSAGE);
       }
 
-      let countOfDay =
-        (dateEndOnDate.getTime() - dateStartOnDate.getTime()) /
-          MILLISENDS_IN_ONE_DAY +
-        1;
+      let countOfDay = datesDiffInDays(dateEnd, dateStart);
 
       // ошибка, если срок аренды не правильный
       if (countOfDay > MAX_RENT_TIME || countOfDay < MIN_RENT_TIME) {
@@ -63,7 +61,7 @@ export class RentSessionService {
 
       return cost;
     } catch (e) {
-      return e.message as string;
+      return NaN;
     }
   }
 
@@ -115,6 +113,18 @@ export class RentSessionService {
         startPeriodDate,
         endPriodDate,
       );
+      return report;
+    } catch (e) {
+      return e.message;
+    }
+  }
+
+  async getReportAboutCarUsageByMonthAndYear(month: number, year: number) {
+    try {
+      const dateStart = getFirstDayOfMonth(month, year);
+      const dateEnd = getLastDayOfMonth(month, year);
+      console.log(dateStart, dateEnd);
+      const report = await this.getReportAboutCarUsage(dateStart, dateEnd);
       return report;
     } catch (e) {
       return e.message;

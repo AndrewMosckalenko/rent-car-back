@@ -6,7 +6,7 @@ import {
   CreateRentSessionDTO,
   GetCarIsAvailableDTO,
   GetReportAboutCarUsageDTO,
-  GetReportByMontDTO,
+  GetReportByMonthDTO,
 } from './dto';
 
 @ApiTags('Rent sessions')
@@ -40,7 +40,7 @@ export class RentSessionController {
   }
 
   @Get('/report-by-month')
-  getReportByMonth(@Query() query: GetReportByMontDTO) {
+  getReportByMonth(@Query() query: GetReportByMonthDTO) {
     return this.rentSessionService.getReportAboutCarUsageByMonthAndYear(
       query.month,
       query.year,

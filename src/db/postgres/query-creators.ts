@@ -1,4 +1,4 @@
-import { datesDiffInDays } from 'src/utils';
+import { datesDiffInDays } from '../../utils';
 import { BREAK_RENT_TIME } from '../../constants';
 import { CreateRentSessionDTO } from '../../rent-session/dto';
 import { rentSessionCreateTableQuery } from './queries';
@@ -63,7 +63,8 @@ export function getReportAboutUseCarQueryCreator(
     FROM rent_sessions 
     WHERE rent_start_date <= DATE($1::date) 
     AND rent_end_date >= DATE($2::date) 
-    GROUP BY car_id;`,
+    GROUP BY car_id
+    ORDER BY usage;`,
     values: [endPeriodDate, startPeriodDate, dayCount],
   };
 }
